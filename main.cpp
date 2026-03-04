@@ -111,5 +111,43 @@ void clearAll(BiList< T >* node) noexcept
   clear(node, nullptr);
 }
 
+template< class T, class F >
+F forwardTraverse(F f, BiList< T >* start, BiList< T >* end)
+{
+  if (!start)
+  {
+    return f;
+  }
+  for (; start != end; start = start->next)
+  {
+    f(start->val);
+  }
+  return f;
+}
+
+template< class T, class F >
+F backTraverse(F f, BiList< T >* start, BiList< T >* end)
+{
+  if (!start)
+  {
+    return f;
+  }
+  for (; start != end; start = start->prev)
+  {
+    f(start->val);
+  }
+  return f;
+}
+
+template< class T, class F >
+F traverseAll(F f, BiList< T >* node)
+{
+  while(node->prev)
+  {
+    node = node->prev;
+  }
+  forwardTraverse(f, node, nullptr);
+}
+
 int main()
 {}
