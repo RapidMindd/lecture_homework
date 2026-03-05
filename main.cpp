@@ -84,7 +84,7 @@ BiList< T >* remove(BiList< T >* h) noexcept
 template< class T >
 BiList< T >* removeAfter(BiList< T >* h) noexcept
 {
-  if (!h->next)
+  if (!h || !h->next)
   {
     return nullptr;
   }
@@ -94,7 +94,7 @@ BiList< T >* removeAfter(BiList< T >* h) noexcept
 template< class T >
 BiList< T >* removeBefore(BiList< T >* h) noexcept
 {
-  if (!h->prev)
+  if (!h || !h->prev)
   {
     return nullptr;
   }
@@ -211,15 +211,46 @@ size_t size(BiList< T >* node)
   return count;
 }
 
+template< class T>
+BiList< T >* getHead(BiList< T >* node)
+{
+  if (!node)
+  {
+    return nullptr;
+  }
+  while(node->prev)
+  {
+    node = node->prev;
+  }
+  return node;
+}
+
+template< class T>
+BiList< T >* getTail(BiList< T >* node)
+{
+  if (!node)
+  {
+    return nullptr;
+  }
+  while(node->next)
+  {
+    node = node->next;
+  }
+  return node;
+}
+
 int main()
 {
   int arr[5] = {1, 2, 3, 4, 5};
   BiList< int >* head = convert(arr, 5);
+  removeAfter(head);
+  BiList< int >* tail = getTail(head);
+  removeBefore(tail);
   for(; head->next; head = head->next)
   {
     std::cout << head->val << " ";
   }
   std::cout << head->val << "\n";
-  traverseAll([](const int & x) { std::cout << x << "\n";}, head);
-  std::cout << size(head) << "\n";
+  traverseAll([](const int & x) { std::cout << x << " ";}, head);
+  std::cout << "\n" << size(head) << "\n";
 }
