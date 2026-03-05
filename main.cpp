@@ -1,3 +1,5 @@
+#include <iostream>
+
 template< class T >
 struct BiList
 {
@@ -72,6 +74,26 @@ BiList< T >* remove(BiList< T >* h) noexcept
 }
 
 template< class T >
+BiList< T >* removeAfter(BiList< T >* h) noexcept
+{
+  if (!h->next)
+  {
+    return nullptr;
+  }
+  return remove(h->next);
+}
+
+template< class T >
+BiList< T >* removeBefore(BiList< T >* h) noexcept
+{
+  if (!h->prev)
+  {
+    return nullptr;
+  }
+  return remove(h->prev);
+}
+
+template< class T >
 BiList< T >* clear(BiList< T >* start, BiList< T >* end) noexcept
 {
   if (!start)
@@ -108,7 +130,7 @@ void clearAll(BiList< T >* node) noexcept
   {
     node = node->prev;
   }
-  clear(node, nullptr);
+  clear< T >(node, nullptr);
 }
 
 template< class T, class F >
@@ -146,8 +168,40 @@ F traverseAll(F f, BiList< T >* node)
   {
     node = node->prev;
   }
-  forwardTraverse(f, node, nullptr);
+  return forwardTraverse(f, node, nullptr);
+}
+
+template< class T >
+BiList< T >* convert(const T* arr, size_t s)
+{
+  if (!arr || !s)
+  {
+    return nullptr;
+  }
+  BiList< T >* head = updateHead< T >(nullptr, arr[0]);;
+  BiList< T >* current = head;
+  try
+  {
+    for (size_t i = 1; i < s; ++i)
+    {
+      current = addAfter(current, arr[i]);
+    }
+  }
+  catch (...)
+  {
+    clearAll(head);
+    throw;
+  }
+  return head;
 }
 
 int main()
-{}
+{
+  int arr[5] = {1, 2, 3, 4, 5};
+  BiList< int >* head = convert(arr, 5);
+  for(; head->next; head = head->next)
+  {
+    std::cout << head->val << " ";
+  }
+  std::cout << head->val << "\n";
+}
